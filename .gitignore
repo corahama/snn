@@ -1,0 +1,6 @@
+temp*
+test*
+__pycache__/
+results/
+*.png
+*local*
