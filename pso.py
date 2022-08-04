@@ -13,7 +13,7 @@ class PSO():
         # Defining initial constants
         self.dataset = dataset # n dimentional numpy array
         self.fe_size = dataset[0].shape[1]
-        self.iters = 50
+        self.iters = 50 # TODO set iterations number as run method's parameter
         self.max_vel = .2
         self.pop = 50
         self.c1, self.c2 = .0205, .0205
@@ -36,7 +36,7 @@ class PSO():
         self.global_idx = 0
 
         # Array to track the evolution of the algorithm
-        self.history = np.empty(self.iters, dtype=np.float64)
+        self.history = np.empty(self.iters, dtype=np.float64) # TODO put history inside run method
 
     """Run the evolutive algorithm"""
     def run(self):
@@ -115,10 +115,10 @@ class PSO():
 
         # return maxsize if dis_afr == 0 else 1/dis_afr + sum(sdfr)
 
-
+"""PSO Multiprocessing implementation"""
 class PSOMultiprocessing(PSO):
     def __init__(self, dataset, sn_model, save_plot=False):
-        super().__init__(dataset, sn_model, save_plot, pop=200, iters=50)
+        super().__init__(dataset, sn_model, save_plot, pop=200, iters=10)
         self.pc = cpu_count()
 
     def update_best_particles(self):

@@ -55,7 +55,7 @@ def get_path(filename):
 
     num = 1
     today = date.today()
-    file_path = lambda: f'results/{today.strftime("%m-%d-%y")}\
+    file_path = lambda: f'results/{today.strftime("%m-%d-%Y")}\
 {f"({num})" if num > 1 else ""} {filename}'
 
     while exists(file_path()):
@@ -101,7 +101,6 @@ def get_tr_te_subsets(features, divs):
     te_features = []
     for idcs in test_idcs:
         te_features.append(features[idcs])
-    te_features= np.array(te_features, dtype=np.float64)
 
     # Generate training subset
     summation = 0
@@ -111,7 +110,7 @@ def get_tr_te_subsets(features, divs):
 
     tr_features = np.split(np.delete(features, np.concatenate(test_idcs), axis=0), divs[1: -1])
 
-    return np.array(tr_features, dtype=np.float64), te_features
+    return tr_features, te_features
 
 """Compare actual pattern labels to predicted labels and return a string with the results"""
 def make_comparations(subset_name, predictions, class_names):

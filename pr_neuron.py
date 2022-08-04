@@ -11,11 +11,11 @@ from bms import BMS
 from srm import SRM
 
 
-PATH = 'datasets/iris.data'
-CL_COL = 4
+# PATH = 'datasets/iris.data'
+# CL_COL = 4
 
-# PATH = 'datasets/wine.data'
-# CL_COL = 0
+PATH = 'datasets/wine.data'
+CL_COL = 0
 
 
 def main(save_res=False, normalize_features=False):
@@ -117,4 +117,4 @@ el metodo \'run\''
 
 
 if __name__ == '__main__':
-    main(save_res=True)
+    main(save_res=False)

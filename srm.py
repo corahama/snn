@@ -8,10 +8,10 @@ class SRM():
         # self.tc = 0
         self.u = []
         self.spikeTrain = []
-        self.V = 10 # mV -> best = {iris: 4, wine: 500, norm: 5}
+        self.V = 500 # mV -> best = {iris: 4, wine: 500, norm: 5}
         # Eta kernel parameters
-        self.eta_0 = 5 # mV -> best = {iris: 22, wine: 20, norm: 5}
-        self.tau_refr = 5 # ms -> best = {iris: 30, wine: 20, norm: 30}
+        self.eta_0 = 20 # mV -> best = {iris: 22, wine: 20, norm: 5}
+        self.tau_refr = 20 # ms -> best = {iris: 30, wine: 20, norm: 30}
         # Kappa kernel parameters
         # self.R = 36 #mOhms -> unused attribute
         self.tau_m = 4 # ms
@@ -20,7 +20,6 @@ class SRM():
     """Response to spike emission"""
     def kernel_eta(self, tc, lft) -> float:
         s = tc - lft
-
         return -self.eta_0 * math.exp(-s/self.tau_refr) * np.heaviside(s, 0)
 
     """Response to presynaptic spike incoming activity"""
@@ -30,7 +29,6 @@ class SRM():
     """Response to incoming external current"""
     def kernel_kappa(self, tc, lft) -> float:
         s = tc - lft
-
         return (1/self.tau_m) * (math.exp(1 - (s/self.tau_rec))) *  np.heaviside(s, 0)
 
     """Run the model within an interval time of 'ts' and return the firing rate"""

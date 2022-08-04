@@ -13,8 +13,8 @@ class Neuron():
 """Spike Response Model based Neuron"""
 class SRM_Neuron(Neuron):
     def __init__(self):
-        self.tau = 10
-        self.theta = 4
+        self.tau = 20 # best -> iris 10, wine: 20
+        self.theta = 20 # best -> iris: 4, wine: 20
         self.pre_syns = [] # (neuron, synaptic weight, delay)
 
     def compute_ftime(self, t):
@@ -71,7 +71,7 @@ class GRF_Neuron(Neuron):
 
 """Spiking neural network"""
 class SNN():
-    def __init__(self, fe_ranges, m=4, h_lsize=10):
+    def __init__(self, fe_ranges, m=4, h_lsize=10): # best -> iris: (4, 10), wine (4, 6)
         self.m = m # number of encoding neurons per feature in input layer
         self.h_lsize = h_lsize # number of neurons in hidden layer
 
@@ -115,12 +115,20 @@ class SNN():
 
 def main():
     import pandas as pd
+    from genetic_algorithm import NNGA
+    from utils import get_divs, get_tr_te_subsets
 
-    dataset, cl_col = pd.read_csv('datasets/iris.data', header=None).values, 4
+    # dataset, cl_col = pd.read_csv('datasets/iris.data', header=None).values, 4
+    dataset, cl_col = pd.read_csv('datasets/wine.data', header=None).values, 0
     fe_cols = (1, dataset.shape[1]) if cl_col == 0 else (0, dataset.shape[1]-1)
+    divs = get_divs(dataset, cl_col)
+
+    tr_features, te_features = get_tr_te_subsets(dataset[:, fe_cols[0]:fe_cols[1]], divs)
 
     fe_ranges = tuple((col.min(), col.max()) for col in (dataset[:, j] for j in range(*fe_cols)))
-    SNN(fe_ranges)
+    snn = SNN(fe_ranges, m=4, h_lsize=6)
+    ga = NNGA(snn, tr_features)
+    wd = ga.run(10)
 
 if __name__ == '__main__':
     main()

@@ -9,8 +9,11 @@ from genetic_algorithm import NNGA
 from utils import get_divs, get_tr_te_subsets, make_comparations, save, read_wd
 
 
-PATH = 'datasets/iris.data'
-CL_COL = 4
+# PATH = 'datasets/iris.data'
+# CL_COL = 4
+
+PATH = 'datasets/wine.data'
+CL_COL = 0
 
 
 def main(save_res=False):
@@ -29,12 +32,13 @@ def main(save_res=False):
 
     # ****** Definition of neural network ******
     m = 4
-    h_lsize = 10
+    h_lsize = 6
     fe_ranges = tuple((col.min(), col.max()) for col in (dataset[:, j] for j in range(*fe_cols)))
     snn = SNN(fe_ranges, m, h_lsize)
 
     # Run training step to obtain optimized weights and delays
-    wd = NNGA(snn, tr_features).run(100, graph=save_res)
+    ga = NNGA(snn, tr_features)
+    wd = ga.run(300, graph=save_res)
 
     # Read weights and delays from a file
     # wd = read_wd('results/06-21-22 data.txt')
@@ -64,9 +68,11 @@ def main(save_res=False):
     # ***** Save results *****
     if save_res:
         save(start_time=start_time, dataset=re.search(r'/(\S+\.\S+$)', PATH).group(1),
-            weights_and_delays=wd, average_firing_times=avg_ftimes, training_results=tr_res_str,
-            testing_results=te_res_str, finish_time=datetime.now().strftime('%H:%M:%S'))
+            tau_and_theta=(snn.O.tau, snn.O.theta), m_and_h_lsize=(snn.m, snn.h_lsize),
+            pop_size=ga.population.shape[0], weights_and_delays=wd, average_firing_times=avg_ftimes,
+            training_results=tr_res_str, testing_results=te_res_str,
+            finish_time=datetime.now().strftime('%H:%M:%S'))
 
 
 if __name__ == '__main__':
-    main(save_res=True)
+    main(save_res=False)
