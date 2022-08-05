@@ -39,15 +39,6 @@ def get_divs(ds, cl_col):
     return divs
 
 
-"""Normalize features in dataset"""
-def norm_features(dataset, fe_cols):
-    for j in range(*fe_cols):
-        min_val, max_val = min(dataset[:, j]), max(dataset[:, j])
-        diff = max_val - min_val
-        for i in range(dataset.shape[0]):
-            dataset[i][j] = (dataset[i][j]-min_val)*10/diff
-
-
 """Generate path for result files"""
 def get_path(filename):
     if not exists('results/'):

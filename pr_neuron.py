@@ -6,7 +6,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 from pso import PSOMultiprocessing
-from utils import get_divs, norm_features, get_tr_te_subsets, make_comparations, save, get_path
+from utils import get_divs, get_tr_te_subsets, make_comparations, save, get_path
 from bms import BMS
 from srm import SRM
 
@@ -18,7 +18,7 @@ PATH = 'datasets/wine.data'
 CL_COL = 0
 
 
-def main(save_res=False, normalize_features=False):
+def main(save_res=False):
     if save_res:
         start_time = datetime.now().strftime('%H:%M:%S')
 
@@ -27,11 +27,9 @@ def main(save_res=False, normalize_features=False):
     divs = get_divs(dataset, CL_COL)
     class_names = tuple(dataset[divs[i]][CL_COL] for i in range(len(divs)-1))
 
-    if normalize_features: norm_features(dataset, fe_cols)
-
     sn_model = BMS()
     # sn_model = SRM()
-    model_parms = dict(filter(lambda i: not isinstance(i[1], list), sn_model.__dict__.items()))
+    n_model_parms = dict(filter(lambda i: not isinstance(i[1], list), sn_model.__dict__.items()))
 
     assert 'get_firing_trace' in dir(sn_model), 'La clase para el modelo neuronal tiene que \
 implementar el metodo \'get_firing_trace\''
@@ -110,9 +108,8 @@ el metodo \'run\''
     # ***** Save results *****
     if save_res:
         save(start_time=start_time, dataset=re.search(r'/(\S+\.\S+$)', PATH).group(1),
-            normalize_features=normalize_features, sn_model=sn_model.__class__.__name__,
-            model_parameters=model_parms, weights=weights, afr=afrs,
-            training_results=tr_res_str, testing_results=te_res_str,
+            sn_model=sn_model.__class__.__name__, neural_model_parameters=n_model_parms,
+            weights=weights, afr=afrs, training_results=tr_res_str, testing_results=te_res_str,
             finish_time=datetime.now().strftime('%H:%M:%S'))
 
 
