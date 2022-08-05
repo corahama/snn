@@ -29,8 +29,8 @@ def main(save_res=False, normalize_features=False):
 
     if normalize_features: norm_features(dataset, fe_cols)
 
-    # sn_model = BMS()
-    sn_model = SRM()
+    sn_model = BMS()
+    # sn_model = SRM()
     model_parms = dict(filter(lambda i: not isinstance(i[1], list), sn_model.__dict__.items()))
 
     assert 'get_firing_trace' in dir(sn_model), 'La clase para el modelo neuronal tiene que \

@@ -13,7 +13,6 @@ class PSO():
         # Defining initial constants
         self.dataset = dataset # n dimentional numpy array
         self.fe_size = dataset[0].shape[1]
-        self.iters = 50 # TODO set iterations number as run method's parameter
         self.max_vel = .2
         self.pop = 50
         self.c1, self.c2 = .0205, .0205
@@ -35,12 +34,12 @@ class PSO():
         self.sw_best_fitnesses = np.full(self.pop, np.inf)
         self.global_idx = 0
 
+    """Runs the evolutive algorithm"""
+    def run(self, iters=50):
         # Array to track the evolution of the algorithm
-        self.history = np.empty(self.iters, dtype=np.float64) # TODO put history inside run method
+        history = np.empty(iters, dtype=np.float64)
 
-    """Run the evolutive algorithm"""
-    def run(self):
-        for iteration in range(self.iters):
+        for iteration in range(iters):
             # Compare actual swarm fitnesses vs best ones
             self.update_best_particles()
 
@@ -59,14 +58,14 @@ class PSO():
 
                 self.swarm[i] = self.swarm[i] + self.velocities[i]
 
-            self.history[iteration] = self.sw_best_fitnesses[self.global_idx]
+            history[iteration] = self.sw_best_fitnesses[self.global_idx]
             print(f'iteration {iteration+1}: {self.sw_best_fitnesses[self.global_idx]}')
 
         if self.save_plot:
-            plt.plot(range(self.iters), self.history)
+            plt.plot(range(iters), history)
             plt.savefig(get_path('w_evolution_history.png'))
 
-        return self.sw_best[self.global_idx], self.history
+        return self.sw_best[self.global_idx], history
 
     """Compare fitnesses of the actual swarm population vs historically best ones"""
     def update_best_particles(self):
@@ -118,7 +117,7 @@ class PSO():
 """PSO Multiprocessing implementation"""
 class PSOMultiprocessing(PSO):
     def __init__(self, dataset, sn_model, save_plot=False):
-        super().__init__(dataset, sn_model, save_plot, pop=200, iters=10)
+        super().__init__(dataset, sn_model, save_plot, pop=200)
         self.pc = cpu_count()
 
     def update_best_particles(self):
